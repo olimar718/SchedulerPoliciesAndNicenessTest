@@ -14,7 +14,8 @@ There are several versions of the time command, one can be downloaded as a separ
 The cpupower program is needed because the frequency of processors on moderns systems change over time. It’s not fixed [34]. With a lower frequency a deterministic program will take longer to execute (even if it doesn”t share the processor). This could impact our test as the frequency will go lower as the test goes on and the temperature of the processor rise.
 The cpupower program is part of the linux kernel [35] and allows administrator to fix the frequency of the processor of a given system.
 
-##  The stress command
+##    The stress command
+
 The stress command simply load the system.[citation needed] In that case we were using cpu load (spinning on sqrt()), but you can also load IO (spinning on sync()), virtual memory (spinning on malloc()/free()) and others. It is a very useful tool to see how your system will behave under heavy load. A stress-ng program also exists but it’s much more complex. The “normal” stress program seemed enough for this usage. [32]
 ## The Test
 The sum of user + sys the “time” command returns should not vary much if at all (only measures errors should occur) for a given deterministic program. Indeed, a given deterministic process always spend the same amount of time on the processor. The only thing that should vary is the “real” return, depending on how the scheduling was done for the process. Another thing to note is that the “sys” return is negligible or null for many programs as they do not need to perform system call or have privileged access.
