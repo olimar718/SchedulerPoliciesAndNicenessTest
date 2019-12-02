@@ -28,4 +28,5 @@ If we get a big real over user however it means that the process wasn’t priori
 ## Expected Results
 Obviously the higher priority policies that are sched_RR and sched_FIFO give better results for the process. We also found that the niceness has a very big impact, just as claimed in the sched man page : “In the current implementation, each unit of difference in the nice values of two processes results in a factor of 1.25 in the degree to which the  scheduler  favors  the  higher  priority  process” .
 
-## Real results coming soon
+## Results
+Look at the pdf file
