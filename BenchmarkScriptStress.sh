@@ -1,8 +1,8 @@
 #!/bin/bash
 frequency=1.7
 NormalFrequency=2.7
-# resultfile="result_niceness_increase_other.txt"
-resultfile="result_fifo_idle"
+
+resultfile="result_fifo_other"
 
 
 time_to_s(){
@@ -31,8 +31,8 @@ sudo echo
 stress -c 4 & #loading the system massively with stresses (4 because I have a 4 core processor)
 for pid in $(pidof stress)
 do
-sudo chrt --idle -p 0 $pid
-  # :
+# sudo chrt --idle -p 0 $pid
+  :
 done
 
 
@@ -48,7 +48,7 @@ commanddeadline='sudo chrt --deadline -p 99 $BASHPID
 time ./increment'
 
 #
-# # RR loop
+# RR loop
 # for staticpriority in $(seq 1 99);
 # do
 #   commandrr='sudo chrt --rr -p '$staticpriority' $BASHPID
@@ -70,7 +70,7 @@ do
   echo $ratio >> $resultfile
 done
 
-## Other LOOP
+# # Other LOOP
 # for niceness in `seq -19 20`;
 # do
 #   commandother='sudo chrt --other -p 0 $BASHPID
@@ -82,6 +82,17 @@ done
 #   echo $ratio >> $resultfile
 # done
 
+# # BATCH LOOP
+# for niceness in `seq -19 20`;
+# do
+#   commandother='sudo chrt --batch -p 0 $BASHPID
+#   sudo renice --priority '$niceness' --pid $BASHPID > /dev/null
+#   { time ./increment >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
+#   result=$(bash <<< $commandother)  #new bash session to avoid setting realtime stresses which would block the system
+#   second=$(time_to_s \'$result\')
+#   ratio=$(bc -l <<< "$second / $seconds_standart_executiontime")
+#   echo $ratio >> $resultfile
+# done
 
 killall stress # removing stresses so that your computer doesn't become a airplane
 sudo cpupower frequency-set --max $NormalFrequency\GHz > /dev/null
