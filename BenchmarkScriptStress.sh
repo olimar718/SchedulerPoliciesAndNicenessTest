@@ -1,9 +1,7 @@
 #!/bin/bash
 frequency=1.7
 NormalFrequency=2.7
-
-resultfile="result_batch_other"
-
+resultfile="result_batch_idle"
 
 time_to_s(){
   executiontime=$1
@@ -19,7 +17,7 @@ time_to_s(){
 
 sudo cpupower frequency-set --max $frequency\GHz > /dev/null
 
-timereturn=$({ time ./increment >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}")
+timereturn=$({ time ./increment 999999999 >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}")
 
 seconds_standart_executiontime=$(time_to_s \'$timereturn\')
 echo $seconds_standart_executiontime
@@ -37,22 +35,11 @@ done
 
 
 
-
-
-
-
-commandbatch='sudo chrt --batch -p 0 $BASHPID
-time ./increment'
-
-commanddeadline='sudo chrt --deadline -p 99 $BASHPID
-time ./increment'
-
-
 # # RR loop
 # for staticpriority in $(seq 1 99);
 # do
 #   commandrr='sudo chrt --rr -p '$staticpriority' $BASHPID
-#   { time ./increment >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
+#   { time ./increment 999999999 >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
 #   result=$(bash <<< $commandrr)  #new bash session to avoid setting realtime stresses which would block the system
 #   second=$(time_to_s \'$result\')
 #   ratio=$(bc -l <<< "$second / $seconds_standart_executiontime")
@@ -63,7 +50,7 @@ time ./increment'
 # for staticpriority in $(seq 1 99);
 # do
 #   commandfifo='sudo chrt --fifo -p '$staticpriority' $BASHPID
-#   { time ./increment >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
+#   { time ./increment 999999999 >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
 #   result=$(bash <<< $commandfifo)  #new bash session to avoid setting realtime stresses which would block the system
 #   second=$(time_to_s \'$result\')
 #   ratio=$(bc -l <<< "$second / $seconds_standart_executiontime")
@@ -75,7 +62,7 @@ time ./increment'
 # do
 #   commandother='sudo chrt --other -p 0 $BASHPID
 #   sudo renice --priority '$niceness' --pid $BASHPID > /dev/null
-#   { time ./increment >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
+#   { time ./increment 999999999 >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
 #   result=$(bash <<< $commandother)  #new bash session to avoid setting realtime stresses which would block the system
 #   second=$(time_to_s \'$result\')
 #   ratio=$(bc -l <<< "$second / $seconds_standart_executiontime")
@@ -87,7 +74,7 @@ for niceness in `seq -19 20`;
 do
   commandother='sudo chrt --batch -p 0 $BASHPID
   sudo renice --priority '$niceness' --pid $BASHPID > /dev/null
-  { time ./increment >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
+  { time ./increment 999999999 >/dev/null; } |&  grep -E real | grep -Eo "[0-9]{1}m[0-9]{1,2}.[0-9]{3}"'
   result=$(bash <<< $commandother)  #new bash session to avoid setting realtime stresses which would block the system
   second=$(time_to_s \'$result\')
   ratio=$(bc -l <<< "$second / $seconds_standart_executiontime")
