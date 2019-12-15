@@ -2,7 +2,7 @@
 # SchedulerPoliciesAndNicenessTest
 
 
-## General approach
+##  General approach
 Even if this script is Linux exclusive the approach taken can be generalized to other operating system. The idea is simply to load the system completely, because that's when the scheduling algorithm and policies will make a difference. You then run any deterministic program at the same and see how much more time it takes.
 
 ## Required Software and usage
